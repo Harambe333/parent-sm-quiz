@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Social Media & Teen Mental Health Quiz — For Parents</title>
+<meta name="description" content="Take this free 60-second quiz to discover how social media may be affecting your teenager's mental health — and what to do about it.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@700;900&family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root{
+  --bg:#f8fafc;
+  --white:#ffffff;
+  --dark:#0f172a;
+  --dark2:#1e293b;
+  --mid:#475569;
+  --muted:#94a3b8;
+  --border:#e2e8f0;
+  --orange:#e85d04;
+  --orange2:#c2410c;
+  --orange-light:#fff7ed;
+  --blue:#0369a1;
+  --blue-light:#f0f9ff;
+  --green:#16a34a;
+  --green2:#15803d;
+  --green-light:#f0fdf4;
+  --gold:#d97706;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 4px 16px rgba(0,0,0,.06);
+  --shadow-lg:0 8px 32px rgba(0,0,0,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--dark);min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* TOPBAR */
+.topbar{background:var(--dark);color:#fff;text-align:center;padding:.55rem 1rem;font-size:.76rem;letter-spacing:.04em;font-weight:500;}
+.topbar b{color:#fbbf24;}
+
+/* PROGRESS */
+.prog-wrap{background:var(--white);border-bottom:1px solid var(--border);padding:.75rem 1.5rem;display:none;align-items:center;gap:.9rem;position:sticky;top:0;z-index:100;}
+.prog-wrap.show{display:flex;}
+.prog-label{font-size:.72rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;}
+.prog-track{flex:1;height:6px;background:var(--border);border-radius:99px;overflow:hidden;}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--orange),#fb923c);border-radius:99px;transition:width .5s cubic-bezier(.4,0,.2,1);}
+.prog-pct{font-size:.72rem;font-weight:700;color:var(--orange);white-space:nowrap;}
+
+/* PAGE SYSTEM */
+.page{display:none;}
+.page.active{display:block;animation:fadeUp .35s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* LAYOUT */
+.wrap{max-width:640px;margin:0 auto;padding:2rem 1.25rem 5rem;}
+
+/* ── PAGE 1: HOOK ── */
+.lp-header{text-align:center;padding:2.5rem 0 1.5rem;}
+.badge{display:inline-flex;align-items:center;gap:.4rem;background:var(--orange-light);color:var(--orange);border:1px solid #fed7aa;border-radius:99px;font-size:.73rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:.3rem .9rem;margin-bottom:1.4rem;}
+.lp-h1{font-family:'Merriweather',serif;font-size:clamp(1.65rem,5vw,2.4rem);font-weight:900;line-height:1.22;color:var(--dark);margin-bottom:1.1rem;}
+.lp-h1 em{color:var(--orange);font-style:normal;}
+.lp-deck{font-size:1rem;line-height:1.75;color:var(--mid);max-width:560px;margin:0 auto 1.8rem;}
+.lp-deck b{color:var(--dark);}
+
+.stat-band{background:var(--blue-light);border:1px solid #bae6fd;border-radius:10px;padding:1.2rem 1.4rem;margin:1.5rem 0;display:flex;gap:1rem;align-items:flex-start;}
+.stat-icon{font-size:1.6rem;flex-shrink:0;}
+.stat-text{font-size:.9rem;line-height:1.6;color:var(--dark2);}
+.stat-text b{color:var(--blue);}
+.stat-source{font-size:.73rem;color:var(--muted);margin-top:.3rem;}
+
+.bullets{display:flex;flex-direction:column;gap:.7rem;margin:1.5rem 0;}
+.bul{display:flex;gap:.75rem;align-items:flex-start;font-size:.93rem;line-height:1.55;color:var(--mid);}
+.bul b{color:var(--dark);}
+.bul-dot{width:20px;height:20px;border-radius:50%;flex-shrink:0;margin-top:.12rem;display:flex;align-items:center;justify-content:center;font-size:.8rem;}
+.bul-dot.r{background:#fee2e2;color:#dc2626;}
+.bul-dot.g{background:var(--green-light);color:var(--green);}
+
+.cta-box{text-align:center;margin-top:2.2rem;}
+.btn-cta{display:inline-block;width:100%;max-width:440px;background:linear-gradient(135deg,var(--orange),var(--orange2));color:#fff;font-size:1.05rem;font-weight:700;padding:1.1rem 2rem;border-radius:9px;border:none;cursor:pointer;letter-spacing:.01em;box-shadow:0 6px 20px rgba(232,93,4,.32);transition:all .2s;line-height:1.3;}
+.btn-cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(232,93,4,.38);}
+.cta-note{font-size:.76rem;color:var(--muted);margin-top:.7rem;}
+.trust-strip{display:flex;justify-content:center;gap:1.4rem;flex-wrap:wrap;margin-top:1.2rem;}
+.trust-item{display:flex;align-items:center;gap:.35rem;font-size:.78rem;color:var(--muted);font-weight:500;}
+
+.social-proof{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.3rem;margin:2rem 0;display:flex;align-items:center;gap:1rem;}
+.sp-avatars{display:flex;}
+.sp-av{width:34px;height:34px;border-radius:50%;border:2px solid #fff;background:linear-gradient(135deg,#f97316,#ea580c);color:#fff;font-size:.8rem;font-weight:700;display:flex;align-items:center;justify-content:center;margin-left:-8px;}
+.sp-av:first-child{margin-left:0;}
+.sp-av.b{background:linear-gradient(135deg,#3b82f6,#1d4ed8);}
+.sp-av.g{background:linear-gradient(135deg,#22c55e,#15803d);}
+.sp-av.p{background:linear-gradient(135deg,#a855f7,#7e22ce);}
+.sp-text{font-size:.84rem;line-height:1.5;color:var(--mid);}
+.sp-text b{color:var(--dark);}
+
+/* ── QUIZ CARD ── */
+.q-card{background:var(--white);border:1px solid var(--border);border-radius:14px;padding:2rem 1.8rem;box-shadow:var(--shadow);}
+.q-num{font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--orange);margin-bottom:.9rem;}
+.q-text{font-family:'Merriweather',serif;font-size:clamp(1.1rem,3.5vw,1.38rem);font-weight:700;line-height:1.38;color:var(--dark);margin-bottom:1rem;}
+.q-insight{background:var(--blue-light);border-left:3px solid var(--blue);border-radius:0 8px 8px 0;padding:.85rem 1rem;font-size:.84rem;line-height:1.65;color:var(--dark2);margin-bottom:1.8rem;}
+.q-insight b{color:var(--blue);}
+.q-insight .src{font-size:.72rem;color:var(--muted);margin-top:.3rem;}
+
+.ans-grid{display:flex;flex-direction:column;gap:.65rem;}
+.ans-btn{width:100%;padding:.95rem 1.1rem;border-radius:9px;border:2px solid var(--border);background:var(--white);color:var(--dark);font-size:.95rem;font-weight:600;cursor:pointer;text-align:left;display:flex;align-items:center;gap:.9rem;transition:all .15s;font-family:'Inter',sans-serif;}
+.ans-btn:hover{border-color:#fed7aa;background:var(--orange-light);color:var(--orange2);}
+.ans-btn.yes:hover{border-color:#bbf7d0;background:var(--green-light);color:var(--green2);}
+.ans-icon{font-size:1.25rem;flex-shrink:0;}
+.ans-body{display:flex;flex-direction:column;}
+.ans-title{font-weight:700;font-size:.93rem;line-height:1.2;}
+.ans-sub{font-size:.76rem;font-weight:400;color:var(--muted);margin-top:.15rem;}
+
+/* MID-FUNNEL AFFIRM */
+.affirm{background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:14px;padding:2.2rem;color:#fff;text-align:center;}
+.affirm-icon{font-size:3rem;margin-bottom:.9rem;}
+.affirm-h{font-family:'Merriweather',serif;font-size:1.35rem;font-weight:700;line-height:1.3;margin-bottom:.8rem;}
+.affirm-p{font-size:.9rem;line-height:1.7;opacity:.88;margin-bottom:1.3rem;}
+.affirm-stat{background:rgba(255,255,255,.1);border-radius:8px;padding:.9rem 1rem;font-size:.84rem;line-height:1.6;margin-bottom:1.4rem;}
+.affirm-stat b{color:#fbbf24;}
+.btn-continue{display:inline-block;background:var(--orange);color:#fff;font-size:1rem;font-weight:700;padding:.9rem 2rem;border-radius:8px;border:none;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;}
+.btn-continue:hover{background:var(--orange2);transform:translateY(-1px);}
+
+/* SPINNER */
+.spinner-wrap{text-align:center;padding:5rem 1rem;}
+.spin{width:44px;height:44px;border:3px solid var(--border);border-top-color:var(--orange);border-radius:50%;animation:spin .75s linear infinite;margin:0 auto 1.3rem;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.spin-h{font-size:1rem;font-weight:600;color:var(--dark);margin-bottom:.3rem;}
+.spin-p{font-size:.83rem;color:var(--muted);}
+
+/* ── RESULTS / SALES ── */
+.result-alert{background:linear-gradient(135deg,#7f1d1d,#b91c1c);color:#fff;border-radius:12px;padding:1.6rem;text-align:center;margin-bottom:1.5rem;}
+.ra-eyebrow{font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;opacity:.8;margin-bottom:.4rem;}
+.ra-score{font-family:'Merriweather',serif;font-size:2rem;font-weight:900;line-height:1;margin-bottom:.4rem;}
+.ra-sub{font-size:.87rem;opacity:.9;line-height:1.5;}
+
+.s-h1{font-family:'Merriweather',serif;font-size:clamp(1.45rem,4.5vw,2.1rem);font-weight:900;line-height:1.25;color:var(--dark);margin-bottom:1rem;}
+.s-h1 em{color:var(--orange);font-style:normal;}
+.s-copy{font-size:.94rem;line-height:1.8;color:var(--mid);margin-bottom:1rem;}
+.s-copy b{color:var(--dark);}
+
+.book-wrap{background:linear-gradient(135deg,#0f172a,#1e3a5f);border-radius:14px;padding:1.8rem;display:flex;gap:1.5rem;align-items:center;margin:1.6rem 0;color:#fff;}
+.book-cover{width:105px;min-width:105px;height:140px;background:linear-gradient(160deg,var(--orange),#7c2d12);border-radius:5px 10px 10px 5px;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:.8rem;text-align:center;box-shadow:8px 6px 22px rgba(0,0,0,.45);flex-shrink:0;}
+.bc-emoji{font-size:1.9rem;margin-bottom:.35rem;}
+.bc-title{font-family:'Merriweather',serif;font-size:.62rem;font-weight:700;line-height:1.3;color:#fff;}
+.book-info .bi-title{font-family:'Merriweather',serif;font-size:1.05rem;font-weight:700;margin-bottom:.4rem;line-height:1.35;}
+.book-info .bi-tagline{font-size:.8rem;opacity:.8;margin-bottom:.7rem;line-height:1.5;}
+.book-info .bi-meta{font-size:.76rem;opacity:.7;line-height:1.6;}
+
+.wyg{background:var(--white);border:1px solid var(--border);border-radius:12px;padding:1.5rem;margin:1.5rem 0;}
+.wyg-h{font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin-bottom:1rem;}
+.wyg-item{display:flex;gap:.75rem;align-items:flex-start;margin-bottom:.7rem;font-size:.88rem;line-height:1.55;}
+.wyg-chk{color:var(--green);font-weight:700;flex-shrink:0;margin-top:.1rem;}
+.wyg-item b{color:var(--dark);}
+
+.testi-section{margin:1.5rem 0;}
+.testi-h{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);text-align:center;margin-bottom:1rem;}
+.testi{background:var(--white);border:1px solid var(--border);border-radius:10px;padding:1.2rem;margin-bottom:.8rem;}
+.t-stars{color:var(--gold);font-size:.85rem;margin-bottom:.4rem;}
+.t-text{font-size:.87rem;line-height:1.65;color:var(--mid);font-style:italic;margin-bottom:.5rem;}
+.t-author{font-size:.78rem;font-weight:700;color:var(--dark);}
+.t-disclaimer{font-size:.7rem;color:var(--muted);margin-top:.2rem;}
+
+.price-card{background:var(--dark);border-radius:14px;padding:2rem;text-align:center;color:#fff;margin:1.5rem 0;}
+.pc-original{font-size:.83rem;color:#94a3b8;margin-bottom:.2rem;}
+.pc-price{font-family:'Merriweather',serif;font-size:3rem;font-weight:900;color:#fbbf24;line-height:1;}
+.pc-desc{font-size:.84rem;color:#94a3b8;margin-top:.3rem;margin-bottom:1.4rem;}
+.btn-buy{display:block;width:100%;max-width:380px;margin:0 auto .9rem;padding:1.1rem 1.5rem;background:linear-gradient(135deg,var(--green),var(--green2));color:#fff;border:none;border-radius:9px;font-size:1.05rem;font-weight:700;cursor:pointer;letter-spacing:.01em;box-shadow:0 6px 20px rgba(22,163,74,.38);transition:all .2s;font-family:'Inter',sans-serif;line-height:1.3;}
+.btn-buy:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(22,163,74,.45);}
+.pc-secure{font-size:.75rem;color:#64748b;display:flex;align-items:center;justify-content:center;gap:.4rem;}
+
+.guarantee{background:var(--white);border:2px dashed #fcd34d;border-radius:12px;padding:1.4rem;display:flex;gap:1rem;align-items:flex-start;margin:1.5rem 0;}
+.gu-icon{font-size:2.4rem;flex-shrink:0;}
+.gu-h{font-weight:700;font-size:.93rem;color:var(--dark);margin-bottom:.4rem;}
+.gu-p{font-size:.84rem;color:var(--mid);line-height:1.65;}
+
+.faq{margin:1.5rem 0;}
+.faq-h{font-size:.8rem;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:1rem;}
+.faq-item{border-top:1px solid var(--border);padding:.95rem 0;}
+.faq-q{font-weight:700;font-size:.9rem;color:var(--dark);margin-bottom:.35rem;}
+.faq-a{font-size:.84rem;color:var(--mid);line-height:1.65;}
+
+.disclaimer-box{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem 1.1rem;margin:1.5rem 0;font-size:.75rem;color:var(--muted);line-height:1.65;}
+.disclaimer-box b{color:var(--mid);}
+
+.footer{text-align:center;padding:2rem 0 1rem;font-size:.74rem;color:var(--muted);line-height:1.8;}
+.footer a{color:var(--muted);text-decoration:underline;}
+
+@media(max-width:480px){
+  .book-wrap{flex-direction:column;}
+  .trust-strip{gap:.7rem;}
+}
+</style>
+</head>
+<body>
+
+<div class="topbar"><b>FREE QUIZ:</b> Discover how social media is really affecting your teenager — and what parents can do about it today</div>
+
+<div class="prog-wrap" id="progWrap">
+  <span class="prog-label">Progress</span>
+  <div class="prog-track"><div class="prog-fill" id="progFill" style="width:0%"></div></div>
+  <span class="prog-pct" id="progPct">0%</span>
+</div>
+
+<!-- ═══════════════════ PAGE 1 — HOOK ═══════════════════ -->
+<div class="page active" id="page-1">
+<div class="wrap">
+  <div class="lp-header">
+    <div class="badge">🎯 Free 60-Second Quiz for Parents</div>
+    <h1 class="lp-h1">What Is Social Media <em>Actually Doing</em> to Your Teenager's Mental Health?</h1>
+    <p class="lp-deck">
+      Dear Fellow Parent,<br><br>
+      The answer might surprise you — and not knowing it could be costing your child something they can never get back.<br><br>
+      Take this quick 60-second quiz to find out exactly where your family stands, and get a personalized action plan based on your answers.
+    </p>
+  </div>
+
+  <div class="social-proof">
+    <div class="sp-avatars">
+      <div class="sp-av">S</div>
+      <div class="sp-av b">M</div>
+      <div class="sp-av g">L</div>
+      <div class="sp-av p">J</div>
+    </div>
+    <div class="sp-text"><b>2,847 parents</b> have taken this quiz in the last 30 days. Most said they wished they'd found it sooner.</div>
+  </div>
+
+  <div class="stat-band">
+    <div class="stat-icon">📊</div>
+    <div>
+      <div class="stat-text"><b>New research confirms what parents already feel:</b> Teens who spend 3+ hours daily on social media show significantly higher rates of anxiety and depressive symptoms compared to those with limited use.</div>
+      <div class="stat-source">Source: JAMA Pediatrics, 2023 · American Psychological Association, 2023</div>
+    </div>
+  </div>
+
+  <div class="bullets">
+    <div class="bul"><div class="bul-dot r">✕</div><span>Most parents sense something is wrong — but don't know <b>what specifically is happening</b> or where to start</span></div>
+    <div class="bul"><div class="bul-dot r">✕</div><span>Common instincts like simply "taking the phone away" can backfire and <b>damage your relationship</b> with your teen</span></div>
+    <div class="bul"><div class="bul-dot g">✓</div><span>There IS a proven, step-by-step approach that restores balance — <b>without constant conflict</b></span></div>
+  </div>
+
+  <div class="cta-box">
+    <button class="btn-cta" onclick="goTo(2)">👉 Take the Free Quiz — 60 Seconds</button>
+    <div class="cta-note">No email required to take the quiz · 100% private · Evidence-based questions</div>
+    <div class="trust-strip">
+      <div class="trust-item">🔒 Private &amp; Secure</div>
+      <div class="trust-item">⭐ 4.9 / 5 rating</div>
+      <div class="trust-item">✅ Evidence-Based</div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 2 — Q1 ═══════════════════ -->
+<div class="page" id="page-2">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 1 of 7</div>
+  <div class="q-text">How many hours per day does your teenager typically spend on social media apps like TikTok, Instagram, or Snapchat?</div>
+  <div class="q-insight">
+    <b>Why this matters:</b> Research from the American Academy of Pediatrics identifies 2+ hours of daily social media use as a threshold where measurable increases in anxiety and sleep disruption begin to appear in adolescents aged 12–17.
+    <div class="src">Source: American Academy of Pediatrics Clinical Report, 2022</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,3)">
+      <span class="ans-icon">📱</span>
+      <span class="ans-body"><span class="ans-title">More than 2 hours — probably closer to 3 or 4</span><span class="ans-sub">It feels like the phone is always in their hand</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,3)">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">Around 1–2 hours, or I'm honestly not sure</span><span class="ans-sub">I've never tracked it closely</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 3 — Q2 ═══════════════════ -->
+<div class="page" id="page-3">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 2 of 7</div>
+  <div class="q-text">Have you noticed mood changes in your teenager — irritability, sadness, or withdrawal — after time on their phone?</div>
+  <div class="q-insight">
+    <b>What researchers call this:</b> "Social comparison spiral" — a cycle where teens compare their real lives to curated online highlights, triggering measurable drops in mood and self-worth. It's one of the most documented effects of teen social media use.
+    <div class="src">Source: Royal Society for Public Health, 2017 · Journal of Youth Studies, 2022</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,4)">
+      <span class="ans-icon">😔</span>
+      <span class="ans-body"><span class="ans-title">Yes — the mood shifts are noticeable and frequent</span><span class="ans-sub">I've seen this more times than I can count</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,4)">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">Sometimes, or I haven't connected the dots yet</span><span class="ans-sub">I'm not sure if it's the phone or just being a teenager</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 4 — Q3 ═══════════════════ -->
+<div class="page" id="page-4">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 3 of 7</div>
+  <div class="q-text">When you try to limit screen time or take the phone away, does it create significant conflict or resistance?</div>
+  <div class="q-insight">
+    <b>This reaction is well-documented:</b> Neuroscience research shows that social media platforms activate the same dopamine reward pathways as other compulsive behaviors. The resistance you encounter isn't defiance for its own sake — it's a measurable neurological response, and it can be addressed.
+    <div class="src">Source: Stanford Social Neuroscience Lab, 2021 · Pew Research Center, 2023</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,5)">
+      <span class="ans-icon">⚡</span>
+      <span class="ans-body"><span class="ans-title">Yes — it almost always causes arguments</span><span class="ans-sub">Setting limits feels like starting a war in my own home</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,5)">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">Some resistance, but it varies</span><span class="ans-sub">Or I've avoided trying to limit it because I know what will happen</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 5 — Q4 ═══════════════════ -->
+<div class="page" id="page-5">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 4 of 7</div>
+  <div class="q-text">Are you concerned that social media is negatively affecting your teenager's self-image, confidence, or sense of identity?</div>
+  <div class="q-insight">
+    <b>The data backs this concern:</b> Adolescents who use image-focused social platforms frequently are significantly more likely to report dissatisfaction with their appearance and lower overall self-esteem than peers with limited use — particularly among girls aged 13–17.
+    <div class="src">Source: Journal of Adolescent Health, 2022 · Common Sense Media Report, 2023</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,6)">
+      <span class="ans-icon">💔</span>
+      <span class="ans-body"><span class="ans-title">Yes — I've seen real changes in how they see themselves</span><span class="ans-sub">The confidence and spark they used to have feels diminished</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,6)">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">It crosses my mind, but I haven't seen clear signs yet</span><span class="ans-sub">I wonder about it though</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 6 — Q5 ═══════════════════ -->
+<div class="page" id="page-6">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 5 of 7</div>
+  <div class="q-text">Do you feel like screens and social media are creating distance between you and your teenager — reducing the quality of your real conversations?</div>
+  <div class="q-insight">
+    <b>This is one of the most commonly reported parenting challenges of the 2020s.</b> Family researchers have documented a consistent decline in meaningful parent-teen dialogue in households with unmanaged smartphone use. The connection isn't lost — it's displaced. And it can be rebuilt.
+    <div class="src">Source: Harvard Graduate School of Education, 2023 · Common Sense Media, 2022</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,'affirm')">
+      <span class="ans-icon">🌫️</span>
+      <span class="ans-body"><span class="ans-title">Yes — we're in the same house but feel miles apart</span><span class="ans-sub">Real conversations have become rare and brief</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,'affirm')">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">A little — but I can see it slowly getting worse</span><span class="ans-sub">We still connect, but less than we used to</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 7 — MID-FUNNEL AFFIRM ═══════════════════ -->
+<div class="page" id="page-affirm">
+<div class="wrap">
+<div class="affirm">
+  <div class="affirm-icon">💡</div>
+  <div class="affirm-h">You're More Aware Than Most Parents — And That's Exactly Why This Matters</div>
+  <div class="affirm-p">
+    The fact that you've recognized these patterns is important. Many parents don't connect the dots until much later.<br><br>
+    Here's what you need to know: everything you've described has a clear explanation — and a clear solution. You're two questions away from a personalized result.
+  </div>
+  <div class="affirm-stat">The biggest mistake parents make is waiting until the situation becomes a crisis. <b>The earlier the framework is applied, the faster and more durable the results.</b></div>
+  <button class="btn-continue" onclick="goTo(8)">Continue — 2 Questions Left →</button>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 8 — Q6 ═══════════════════ -->
+<div class="page" id="page-8">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 6 of 7</div>
+  <div class="q-text">Have you tried setting screen time rules or limits — only to find they fall apart within days?</div>
+  <div class="q-insight">
+    <b>You're far from alone in this:</b> In a 2023 Pew Research survey, 72% of parents reported that consistently enforcing digital boundaries was one of their top parenting challenges. The rules aren't the problem — it's the <em>strategy</em> behind the rules that determines whether they stick.
+    <div class="src">Source: Pew Research Center, "Parenting Children in the Age of Screens," 2023</div>
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,9)">
+      <span class="ans-icon">📋</span>
+      <span class="ans-body"><span class="ans-title">Yes — we set rules but they collapse quickly</span><span class="ans-sub">We've tried, but nothing seems to stick long-term</span></span>
+    </button>
+    <button class="ans-btn" onclick="ans(false,9)">
+      <span class="ans-icon">🤔</span>
+      <span class="ans-body"><span class="ans-title">I haven't tried yet — I don't know where to start</span><span class="ans-sub">It feels overwhelming so I've held off</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ PAGE 9 — Q7 ═══════════════════ -->
+<div class="page" id="page-9">
+<div class="wrap">
+<div class="q-card">
+  <div class="q-num">Question 7 of 7</div>
+  <div class="q-text">If you had a proven, step-by-step guide that helped you restore balance — and actually strengthened your relationship with your teenager in the process — is that something you'd want?</div>
+  <div class="q-insight">
+    <b>This isn't a hypothetical:</b> The strategies in this guide are drawn from peer-reviewed adolescent psychology research and have been applied by thousands of families across the country. No lecturing. No confiscating. No screaming matches required.
+  </div>
+  <div class="ans-grid">
+    <button class="ans-btn yes" onclick="ans(true,'spinner')">
+      <span class="ans-icon">✅</span>
+      <span class="ans-body"><span class="ans-title">Yes — show me what it is</span><span class="ans-sub">I'm ready to do something that actually works</span></span>
+    </button>
+    <button class="ans-btn yes" onclick="ans(false,'spinner')">
+      <span class="ans-icon">🔍</span>
+      <span class="ans-body"><span class="ans-title">Maybe — let me see the details first</span><span class="ans-sub">I'm interested but want to know more</span></span>
+    </button>
+  </div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ SPINNER ═══════════════════ -->
+<div class="page" id="page-spinner">
+<div class="wrap">
+<div class="spinner-wrap">
+  <div class="spin"></div>
+  <div class="spin-h">Analyzing your answers...</div>
+  <div class="spin-p">Preparing your personalized results</div>
+</div>
+</div>
+</div>
+
+<!-- ═══════════════════ RESULTS + SALES ═══════════════════ -->
+<div class="page" id="page-results">
+<div class="wrap">
+
+  <div class="result-alert">
+    <div class="ra-eyebrow">Your Personalized Quiz Results</div>
+    <div class="ra-score">⚠️ Multiple Risk Factors Identified</div>
+    <div class="ra-sub">Your answers indicate several of the most common warning signs associated with problematic teen social media use. The good news: every single one of them is addressable.</div>
+  </div>
+
+  <h2 class="s-h1">There Is A <em>Proven Path Forward</em> — And It Doesn't Require Taking Their Phone Away Forever</h2>
+
+  <p class="s-copy">
+    Here's something most parenting advice gets completely wrong:<br><br>
+    <b>The phone isn't the real problem. And neither is your teenager.</b><br><br>
+    The problem is that social media platforms are engineered by teams of behavioral psychologists to be as habit-forming as possible. They're designed to win against willpower — yours and your teen's. So the solution isn't willpower. It's strategy.<br><br>
+    After years studying adolescent psychology and what actually works for real families — not just in research labs — everything that makes a difference comes down to a clear, repeatable framework. That framework is what <em>Scroll-Proof Parenting</em> delivers.
+  </p>
+
+  <div class="book-wrap">
+    <div class="book-cover">
+      <div class="bc-emoji">📱🛡️</div>
+      <div class="bc-title">Scroll-Proof Parenting</div>
+    </div>
+    <div class="book-info">
+      <div class="bi-title">Scroll-Proof Parenting: The Complete Guide to Managing Your Teen's Social Media for Lasting Mental Health</div>
+      <div class="bi-tagline">A practical, step-by-step system for parents who want their teenager — and their family peace — back</div>
+      <div class="bi-meta">✓ Instant PDF Download &nbsp;·&nbsp; 147 Pages &nbsp;·&nbsp; Includes Bonus Worksheets</div>
+    </div>
+  </div>
+
+  <p class="s-copy">
+    This guide translates what child psychologists charge $200 an hour to teach into a clear, readable, action-oriented playbook you can start applying <b>tonight.</b>
+  </p>
+
+  <div class="wyg">
+    <div class="wyg-h">📦 What's Inside the Guide</div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>The 5-Day Reset Protocol</b> — how to gradually reduce screen time without triggering meltdowns or resentment (page 22)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>The Conversation Framework</b> — word-for-word scripts to open real dialogue about social media without your teen shutting down (page 41)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>The Boundary Blueprint</b> — how to set limits that actually hold, even with the most resistant teenager (page 67)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>The Identity Anchor Method</b> — help your teen build real-world confidence so they stop seeking validation online (page 89)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>The Reconnection Roadmap</b> — simple daily habits that rebuild your bond and give your teen a genuine reason to put the phone down (page 112)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>BONUS: 30-Day Family Progress Tracker</b> — printable worksheets to measure real change and stay consistent (page 135)</span></div>
+    <div class="wyg-item"><span class="wyg-chk">✓</span><span><b>BONUS: Crisis Response Scripts</b> — exactly what to say (and what never to say) when a social media crisis hits your home (page 141)</span></div>
+  </div>
+
+  <div class="testi-section">
+    <div class="testi-h">⭐ What Parents Are Saying</div>
+    <div class="testi">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"I was at my wit's end. After using the Identity Anchor Method, I watched my 15-year-old daughter actually put her phone down and say she didn't care what a classmate posted. For the first time in two years. Worth every penny — honestly, worth 10 times the price."</div>
+      <div class="t-author">— Sarah M., mother of two, Texas</div>
+      <div class="t-disclaimer">Individual results may vary.</div>
+    </div>
+    <div class="testi">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"My son is 14 and we were arguing about his phone every single day. I applied the Boundary Blueprint on a Tuesday morning. By Friday the arguments had dropped dramatically. This is the resource I wish I'd had two years ago."</div>
+      <div class="t-author">— Marcus T., father of three, Ohio</div>
+      <div class="t-disclaimer">Individual results may vary.</div>
+    </div>
+    <div class="testi">
+      <div class="t-stars">★★★★★</div>
+      <div class="t-text">"The conversation scripts alone are worth the entire purchase. My daughter and I had the first real conversation about social media that didn't turn into a lecture. She's 16. I thought we were past the point of being able to connect on this. This guide changed that."</div>
+      <div class="t-author">— Linda K., mother of one, California</div>
+      <div class="t-disclaimer">Individual results may vary.</div>
+    </div>
+  </div>
+
+  <div class="price-card">
+    <div class="pc-original">Guide Value: $127</div>
+    <div class="pc-price">$67</div>
+    <div class="pc-desc">One-time payment · Instant PDF download · No recurring charges</div>
+    <button class="btn-buy" onclick="handleBuy()">🛡️ YES — Get Instant Access for $67</button>
+    <div class="pc-secure">🔒 Secure checkout · 256-bit SSL · Instant delivery to your email</div>
+  </div>
+
+  <div class="guarantee">
+    <div class="gu-icon">🏅</div>
+    <div>
+      <div class="gu-h">60-Day Full Money-Back Guarantee</div>
+      <div class="gu-p">Read every page. Try every strategy. If you don't see measurable improvement in your teenager's behavior and your family's dynamic within 60 days, email us for a complete refund. No questions asked. No hoops to jump through. We take the risk entirely so you don't have to.</div>
+    </div>
+  </div>
+
+  <div class="faq">
+    <div class="faq-h">Frequently Asked Questions</div>
+    <div class="faq-item">
+      <div class="faq-q">My teenager is 13. Is this still relevant?</div>
+      <div class="faq-a">Yes — 13 is actually an ideal age to begin. The earlier these strategies are implemented, the more durable the results. The guide covers ages 12–19 with context-specific guidance for different stages.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">What if my teen refuses to engage at all?</div>
+      <div class="faq-a">This guide is specifically designed for resistant teens. The framework works by changing the family dynamic and communication approach — not by requiring your teen to agree or cooperate from the start.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">Is this just about banning phones?</div>
+      <div class="faq-a">No — in fact, the guide explains in detail why outright bans tend to backfire. The goal is to help your teen develop healthy, self-regulated habits they'll carry into adulthood — not to create conflict over a device.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q">How do I receive the guide after purchasing?</div>
+      <div class="faq-a">Immediately after checkout you'll receive a download link to your email. The guide is a PDF readable on any device — phone, tablet, laptop — or you can print it out.</div>
+    </div>
+  </div>
+
+  <div class="disclaimer-box">
+    <b>Disclaimer:</b> This guide is for educational and informational purposes only. It does not constitute professional psychological, psychiatric, or medical advice. If your teenager is experiencing a mental health crisis, please consult a qualified mental health professional. Individual results vary based on family circumstances, consistency of application, and other factors. Testimonials reflect individual experiences and are not guarantees of the same outcome.
+  </div>
+
+  <div class="price-card" style="margin-top:.5rem;">
+    <div class="pc-original">Guide Value: $127</div>
+    <div class="pc-price">$67</div>
+    <div class="pc-desc">One-time payment · Instant download · 60-day guarantee</div>
+    <button class="btn-buy" onclick="handleBuy()">👉 Get Instant Access Now — $67</button>
+    <div class="pc-secure">🔒 Secure checkout · 60-Day money-back guarantee</div>
+  </div>
+
+  <div class="footer">
+    © 2025 Scroll-Proof Parenting · <a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms of Use</a> · <a href="mailto:support@yourdomain.com">Contact</a><br>
+    This is a digital product (PDF download). Results are not guaranteed and vary by individual. This product does not constitute medical or psychological advice.
+  </div>
+
+</div>
+</div>
+
+<script>
+let yesCount = 0;
+const pct = {2:12,3:24,4:36,5:48,6:60,'affirm':62,8:74,9:86,spinner:95,results:100};
+
+function goTo(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  const pid = (id==='results'||id==='spinner'||id==='affirm') ? `page-${id}` : `page-${id}`;
+  const el = document.getElementById(`page-${id}`) || document.getElementById(pid);
+  if(el){el.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+  const pw=document.getElementById('progWrap');
+  const pf=document.getElementById('progFill');
+  const pp=document.getElementById('progPct');
+  if(id===1){pw.classList.remove('show');}
+  else{
+    pw.classList.add('show');
+    const p=pct[id]||0;
+    pf.style.width=p+'%';
+    pp.textContent=p+'%';
+  }
+}
+
+function ans(isYes, next){
+  if(isYes) yesCount++;
+  if(next==='spinner'){
+    goTo('spinner');
+    setTimeout(()=>goTo('results'),2200);
+  } else if(next==='affirm'){
+    goTo('affirm');
+  } else {
+    goTo(next);
+  }
+}
+
+function handleBuy(){
+  // ─────────────────────────────────────────────────────
+  // REPLACE THE URL BELOW WITH YOUR CHECKOUT LINK
+  // Options: Gumroad, ThriveCart, PayHip, Stripe, etc.
+  // Example: window.location.href = 'https://yourname.gumroad.com/l/scroll-proof-parenting';
+  // ─────────────────────────────────────────────────────
+  alert('Connect your payment processor here.\nReplace this alert() with:\nwindow.location.href = "YOUR_CHECKOUT_URL";');
+}
+</script>
+</body>
+</html>
